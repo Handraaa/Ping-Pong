@@ -113,7 +113,16 @@ window.addEventListener('keydown', function (event) {
 });
 
 window.addEventListener('keyup', function (event) {
-    console.log('keyup' + event.code);
+   const code = event.code;
+   if(code === P1_UP_BUTTON && p1Action === UP_ACTION) {
+    p1Action = STOP_ACTION;
+   } else if (code === P1_DOWN_BUTTON && p1Action === DOWN_ACTION) {
+    p1Action = STOP_ACTION;
+   } else if (code === P2_UP_BUTTON && p2Action === UP_ACTION) {
+    p2Action = STOP_ACTION;
+   } else if (code === P2_DOWN_BUTTON && p2Action === DOWN_ACTION) {
+    p2Action = STOP_ACTION;
+   }
 });
 
 window.addEventListener('keydown', function (event) {
@@ -142,11 +151,12 @@ function movePaddles() {
     }
 }
 
+
 function updateState() {
     movePaddles();
 
     ballX += ballDX;
-    ballY += ballDY;
+    ballY += ballDY;    
 }
 
 function updateAndDrawState() {
