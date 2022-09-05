@@ -47,6 +47,9 @@ const STATE_CHANGE_INTERVAL = 20;
 
 const PADDLE_STEP = 3;
 
+let paused = false;
+const PAUSE_BUTTON = 'KeyB';
+
 ctx.fillStyle = "white";
 ctx.font = "20px Arial";
 
@@ -108,10 +111,6 @@ function drawState() {
 
 //zmiana stanu  
 
-window.addEventListener('keydown', function (event) {
-    console.log('keydown' + event.code);
-});
-
 window.addEventListener('keyup', function (event) {
    const code = event.code;
    if(code === P1_UP_BUTTON && p1Action === UP_ACTION) {
@@ -135,33 +134,33 @@ window.addEventListener('keydown', function (event) {
         p2Action = UP_ACTION;
     } else if (code === P2_DOWN_BUTTON) {
         p2Action = DOWN_ACTION;
+    } else if (code === PAUSE_BUTTON) {
+        paused = !paused;
     }
 });
 
 function movePaddles() {
-    if (p1Action === UP_ACTION) {
+    if (p1Action === UP_ACTION &&  p1PaddleY >= 0) {
         p1PaddleY -= PADDLE_STEP;
-    } else if (p1Action === DOWN_ACTION) {
+    } else if (p1Action === DOWN_ACTION && p1PaddleY + PADDLE_HEIGHT <= CANVAS_HEIGHT) {
         p1PaddleY += PADDLE_STEP;
     }
-    if (p2Action === UP_ACTION) {
+    if (p2Action === UP_ACTION && p2PaddleY >= 0) {
         p2PaddleY -= PADDLE_STEP;
-    } else if (p2Action === DOWN_ACTION) {
+    } else if (p2Action === DOWN_ACTION && p2PaddleY + PADDLE_HEIGHT <= CANVAS_HEIGHT) {
         p2PaddleY += PADDLE_STEP;
-    }
+    } 
 }
-
 
 function updateState() {
     movePaddles();
-
-    ballX += ballDX;
-    ballY += ballDY;    
 }
 
 function updateAndDrawState() {
+    if (!paused) {
     updateState();
     drawState();
+ }
 }
 
 setInterval(updateAndDrawState, STATE_CHANGE_INTERVAL);
