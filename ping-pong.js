@@ -31,7 +31,21 @@ const BALL_START_DX = 4.5;
 const BALL_START_DY = 1.5;
 //pocz. lotu piłki na współrzędnej y
 
+const P1_UP_BUTTON = 'KeyQ';
+const P1_DOWN_BUTTON = 'KeyA';
+const P2_UP_BUTTON = 'KeyP';
+const P2_DOWN_BUTTON = 'KeyL';
+
+const UP_ACTION = 'up';
+const DOWN_ACTION = 'down';
+const STOP_ACTION = 'stop';
+
+let p1Action = STOP_ACTION;
+let p2Action = STOP_ACTION;
+
 const STATE_CHANGE_INTERVAL = 20;
+
+const PADDLE_STEP = 3;
 
 ctx.fillStyle = "white";
 ctx.font = "20px Arial";
@@ -94,13 +108,45 @@ function drawState() {
 
 //zmiana stanu  
 
+window.addEventListener('keydown', function (event) {
+    console.log('keydown' + event.code);
+});
+
+window.addEventListener('keyup', function (event) {
+    console.log('keyup' + event.code);
+});
+
+window.addEventListener('keydown', function (event) {
+    const code = event.code;
+    if (code === P1_UP_BUTTON) {
+        p1Action = UP_ACTION;
+    } else if (code === P1_DOWN_BUTTON) {
+        p1Action = DOWN_ACTION;
+    } else if (code === P2_UP_BUTTON) {
+        p2Action = UP_ACTION;
+    } else if (code === P2_DOWN_BUTTON) {
+        p2Action = DOWN_ACTION;
+    }
+});
+
+function movePaddles() {
+    if (p1Action === UP_ACTION) {
+        p1PaddleY -= PADDLE_STEP;
+    } else if (p1Action === DOWN_ACTION) {
+        p1PaddleY += PADDLE_STEP;
+    }
+    if (p2Action === UP_ACTION) {
+        p2PaddleY -= PADDLE_STEP;
+    } else if (p2Action === DOWN_ACTION) {
+        p2PaddleY += PADDLE_STEP;
+    }
+}
+
 function updateState() {
+    movePaddles();
+
     ballX += ballDX;
     ballY += ballDY;
-    p1PaddleY++;
-    p2PaddleY--;
-    p1Points++;
-    p2Points += 3;
 }
 
 function updateAndDrawState() {
@@ -109,6 +155,8 @@ function updateAndDrawState() {
 }
 
 setInterval(updateAndDrawState, STATE_CHANGE_INTERVAL);
+
+
 
 drawPaddle(770, 100);
 drawPaddle(10, 300);  
